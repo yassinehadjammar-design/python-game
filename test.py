@@ -20,25 +20,41 @@ clock = pygame.time.Clock()
 
 def ease_out_quad(t):
     return t * (2 - t)
-def tween_next_value(current_val, start_val, end_val,smoothFunc):
-    # 1. Prevent division by zero if start and end are identical
+def tween_next_value_step(current_val, start_val, end_val,dt, smooth_func):
+    """
+    Calculates the exact next value step dynamically.
+    Works frame-by-frame using only the current value.
+    """
+    # 1. Prevent division by zero
     if start_val == end_val:
         return end_val
-        
-    # 2. Calculate linear progress 't' (Normalizes current_val to 0.0 - 1.0)
+
+    # 2. Find current linear progress (0.0 to 1.0)
     t = (current_val - start_val) / (end_val - start_val)
-    print(f"({current_val} - {start_val}) / ({end_val} - {start_val}) = {t}")
-    # Enforce strict 0.0 to 1.0 boundaries
     t = max(0.0, min(t, 1.0))
+
+    # 3. Use an incredibly tiny time step (dt) to find the slope/velocity of your easing curve
     
-    # 3. Apply Quadratic Ease-Out curve (Starts fast, slows down at the end)
-    # Change this line to "curved_t = t * t" if you prefer an Ease-In effect
-    curved_t = smoothFunc(t)
-    print(f"smoothed value is {curved_t}")
-    # 4. Map the curved progress back into your actual coordinate range
-    smoothed_val = start_val + (end_val - start_val) * curved_t
+    # Calculate the rate of change (how fast the curve is moving right now)
+    current_speed = smooth_func(t)
+    next_speed = smooth_func(min(t + dt, 1.0))
+    curve_slope = next_speed - current_speed
+
+    # 4. If the slope is zero (stuck at start), force a baseline starting step to kickstart movement
+    if curve_slope <= 0:
+        curve_slope = dt * 1.5 
+
+    # 5. Calculate the next physical step size based on that curve speed
+    step = (end_val - start_val) * curve_slope
+
+    # 6. Apply step and return the next value
+    next_val = current_val + step
     
-    return smoothed_val
+    # Don't overshoot the final target range
+    if start_val < end_val:
+        return max(start_val, min(next_val, end_val))
+    else:
+        return min(start_val, max(next_val, end_val))
 
 class player(object):
     def __init__(self,x,y,width,height) :
@@ -176,7 +192,7 @@ while run :
             if man.jump_count < 0 :
                 neg = -1 
             man.y -= (man.jump_count ** 2) * 0.5 * neg
-            man.jump_count = tween_next_value(man.jump_count,10,-10,ease_out_quad)
+            man.jump_count = tween_next_value_step(man.jump_count,10,-10,1/27,ease_out_quad)
             print(f"jump value is {man.jump_count}")
         else :
             man.is_jump = False 
