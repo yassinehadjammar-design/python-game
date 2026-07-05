@@ -27,7 +27,7 @@ def parabolic_tween(t: float) -> float:
     - t = 0.5 -> returns 1.0
     - t = 1.0 -> returns -1.0
     """
-    return -6.0 * (t ** 2) + 5.0 * t
+    return -12.0 * (t ** 2) + 8.0 * t
 def lerp(start: float, end: float, alpha: float) -> float:
     """Linearly interpolates between start and end based on alpha (0.0 to 1.0)."""
     return start + (end - start) * alpha
@@ -143,9 +143,9 @@ while run :
         if len(bullets) < 10 :
             if man.last_shot >=  10 :
                 if man.right and not man.left :
-                    bullets.append(projectile(round(man.x + man.width // 2) ,round( man.y + man.height // 2) , 3 , (184,134,11) , facing ))
+                    bullets.append(projectile(round(man.x + 65) ,round( man.y + 37) , 3 , (184,134,11) , facing ))
                 else :
-                    bullets.append(projectile(round(man.x + man.width // 2) ,round( man.y + man.height // 2) , 3 , (184,134,11) , facing ))
+                    bullets.append(projectile(round(man.x ) ,round( man.y + 37) , 3 , (184,134,11) , facing ))
                 man.last_shot = 0 
     
     if man.last_shot <= 10 :
@@ -172,7 +172,7 @@ while run :
             man.walk_count = 0
 
     else :
-        man.y -= (parabolic_tween(man.jump_count) ** 20) * 0.5
+        man.y -= (parabolic_tween(man.jump_count) * 20)
         man.jump_count = min(1,man.jump_count+ (1/(27*jumpDelay)))
         print(f"jump value is {man.jump_count}->{parabolic_tween(man.jump_count)}")
         if (man.jump_count==1):
