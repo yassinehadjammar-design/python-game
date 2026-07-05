@@ -41,7 +41,7 @@ def tween_next_value_step(current_val, start_val, end_val,dt, smooth_func):
     curve_slope = next_speed - current_speed
 
     # 4. If the slope is zero (stuck at start), force a baseline starting step to kickstart movement
-    if curve_slope <= 0:
+    if curve_slope < dt *1.5:
         curve_slope = dt * 1.5 
 
     # 5. Calculate the next physical step size based on that curve speed
