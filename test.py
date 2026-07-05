@@ -18,6 +18,8 @@ char = pygame.image.load('images/standing.png')
 # game clock 
 clock = pygame.time.Clock()
 
+def ease_out_quad(t):
+    return t * (2 - t)
 def tween_next_value(current_val, start_val, end_val,smoothFunc):
     # 1. Prevent division by zero if start and end are identical
     if start_val == end_val:
@@ -32,13 +34,12 @@ def tween_next_value(current_val, start_val, end_val,smoothFunc):
     # 3. Apply Quadratic Ease-Out curve (Starts fast, slows down at the end)
     # Change this line to "curved_t = t * t" if you prefer an Ease-In effect
     curved_t = smoothFunc(t)
-    
+    print(f"smoothed value is {curved_t}")
     # 4. Map the curved progress back into your actual coordinate range
     smoothed_val = start_val + (end_val - start_val) * curved_t
     
     return smoothed_val
-def ease_out_quad(t):
-    return t * (2 - t)
+
 class player(object):
     def __init__(self,x,y,width,height) :
         self.x = x
