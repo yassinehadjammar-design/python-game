@@ -18,16 +18,17 @@ player_gun = [pygame.image.load('images/left_gun.png'),pygame.image.load('images
 
 # game clock 
 clock = pygame.time.Clock()
-
+floorY = 410
 jumpDelay = 1
-def parabolic_tween(t: float) -> float:
+def arch_tween(t: float) -> float:
     """
-    Parabolic function mapping progress `t` (0 to 1):
+    Parabolic arch mapping progress `t` (0 to 1):
     - t = 0.0 -> returns 0.0
     - t = 0.5 -> returns 1.0
-    - t = 1.0 -> returns -1.0
+    - t = 1.0 -> returns 0.0
+    - Stays completely positive (no negative values)
     """
-    return -12.0 * (t ** 2) + 8.0 * t
+    return -4.0 * (t ** 2) + 4.0 * t
 def lerp(start: float, end: float, alpha: float) -> float:
     """Linearly interpolates between start and end based on alpha (0.0 to 1.0)."""
     return start + (end - start) * alpha
@@ -111,7 +112,7 @@ def redraw_game_window():
 
 # every game has a while loop that checks for collision and movment and verything , this loop is essential
 
-man = player(300,410,64,64)
+man = player(300,floorY,64,64)
 bullets = []
 
 run = True
@@ -172,9 +173,9 @@ while run :
             man.walk_count = 0
 
     else :
-        man.y -= (parabolic_tween(man.jump_count) * 20)
+        man.y = (arch_tween(man.jump_count) * 20) +floorY
         man.jump_count = min(1,man.jump_count+ (1/(27*jumpDelay)))
-        print(f"jump value is {man.jump_count}->{parabolic_tween(man.jump_count)}")
+        print(f"jump value is {man.jump_count}->{arch_tween(man.jump_count)}")
         if (man.jump_count==1):
             man.is_jump = False
             man.jump_count = 0
