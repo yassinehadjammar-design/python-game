@@ -187,7 +187,7 @@ while run :
             man.walk_count = 0
 
     else :
-        if man.jump_count >= -10 :
+        if man.jump_count > -10 :
             neg = 1
             if man.jump_count < 0 :
                 neg = -1 
