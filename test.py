@@ -176,6 +176,7 @@ while run :
                 neg = -1 
             man.y -= (man.jump_count ** 2) * 0.5 * neg
             man.jump_count = tween_next_value(man.jump_count,10,-10,ease_out_quad)
+            prinf(f"jump value is {man.jump_count}")
         else :
             man.is_jump = False 
             man.jump_count = 10
