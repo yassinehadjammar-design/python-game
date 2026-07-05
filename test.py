@@ -173,7 +173,7 @@ while run :
             man.walk_count = 0
 
     else :
-        man.y = (arch_tween(man.jump_count) * 20) +floorY
+        man.y = -(arch_tween(man.jump_count) * 30) +floorY
         man.jump_count = min(1,man.jump_count+ (1/(27*jumpDelay)))
         print(f"jump value is {man.jump_count}->{arch_tween(man.jump_count)}")
         if (man.jump_count==1):
