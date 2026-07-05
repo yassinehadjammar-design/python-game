@@ -19,7 +19,7 @@ player_gun = [pygame.image.load('images/left_gun.png'),pygame.image.load('images
 # game clock 
 clock = pygame.time.Clock()
 
-jumpDelay = 2
+jumpDelay = 1
 def parabolic_tween(t: float) -> float:
     """
     Parabolic function mapping progress `t` (0 to 1):
