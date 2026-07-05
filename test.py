@@ -16,7 +16,7 @@ background_image = pygame.image.load('images/bg.jpg')
 char = pygame.image.load('images/standing.png')
 
 # game clock 
-clock = pygame.time.Clock() 
+clock = pygame.time.Clock()
 
 class player(object):
     def __init__(self,x,y,width,height) :
@@ -34,6 +34,8 @@ class player(object):
         self.walk_count = 0
 
         self.standing = True
+
+        self.last_shot = 0
 
     def draw(self,window):
         # drawing the caracter
@@ -112,8 +114,8 @@ while run :
 
     # player movment
     keys = pygame.key.get_pressed()
-
-    if keys[pygame.K_SPACE] :
+    
+    if keys[pygame.K_SPACE] and ( man.left or man.right ):
         if man.left :
             facing = -1 
         else :
@@ -157,3 +159,8 @@ while run :
 
 # quitting the game
 pygame.quit()
+
+def ease_out_quad(t):
+    return t * (2 - t)
+
+
