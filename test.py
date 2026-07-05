@@ -120,8 +120,11 @@ while run :
             facing = -1 
         else :
             facing = 1
-        if len(bullets) < 5 :
-            bullets.append(projectile(round(man.x + man.width // 2) ,round( man.y + man.height // 2) , 6 , (0,0,0) , facing ))
+        if len(bullets) < 10 :
+            if man.last_shot ==  10 :
+                bullets.append(projectile(round(man.x + man.width // 2) ,round( man.y + man.height // 2) , 6 , (0,0,0) , facing ))
+                man.last_shot = 0
+            man.last_shot += 1
 
     if keys[pygame.K_LEFT] and man.x > 0 :
         man.x -= man.velocity
