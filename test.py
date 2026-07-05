@@ -14,47 +14,23 @@ walk_right = [pygame.image.load('images/R1.png'), pygame.image.load('images/R2.p
 walk_left = [pygame.image.load('images/L1.png'), pygame.image.load('images/L2.png'), pygame.image.load('images/L3.png'), pygame.image.load('images/L4.png'), pygame.image.load('images/L5.png'), pygame.image.load('images/L6.png'), pygame.image.load('images/L7.png'), pygame.image.load('images/L8.png'), pygame.image.load('images/L9.png')]
 background_image = pygame.image.load('images/bg.jpg')
 char = pygame.image.load('images/standing.png')
+player_gun = pygame.image.load('images/gun.png')
 
 # game clock 
 clock = pygame.time.Clock()
 
-def ease_out_quad(t):
-    return t * (2 - t)
-def tween_next_value_step(current_val, start_val, end_val,dt, smooth_func):
+jumpDelay = 2
+def parabolic_tween(t: float) -> float:
     """
-    Calculates the exact next value step dynamically.
-    Works frame-by-frame using only the current value.
+    Parabolic function mapping progress `t` (0 to 1):
+    - t = 0.0 -> returns 0.0
+    - t = 0.5 -> returns 1.0
+    - t = 1.0 -> returns -1.0
     """
-    # 1. Prevent division by zero
-    if start_val == end_val:
-        return end_val
-
-    # 2. Find current linear progress (0.0 to 1.0)
-    t = (current_val - start_val) / (end_val - start_val)
-    t = max(0.0, min(t, 1.0))
-
-    # 3. Use an incredibly tiny time step (dt) to find the slope/velocity of your easing curve
-    
-    # Calculate the rate of change (how fast the curve is moving right now)
-    current_speed = smooth_func(t)
-    next_speed = smooth_func(min(t + dt, 1.0))
-    curve_slope = next_speed - current_speed
-
-    # 4. If the slope is zero (stuck at start), force a baseline starting step to kickstart movement
-    if curve_slope < dt *1.5:
-        curve_slope = dt * 1.5 
-
-    # 5. Calculate the next physical step size based on that curve speed
-    step = (end_val - start_val) * curve_slope
-
-    # 6. Apply step and return the next value
-    next_val = current_val + step
-    
-    # Don't overshoot the final target range
-    if start_val < end_val:
-        return max(start_val, min(next_val, end_val))
-    else:
-        return min(start_val, max(next_val, end_val))
+    return -6.0 * (t ** 2) + 5.0 * t
+def lerp(start: float, end: float, alpha: float) -> float:
+    """Linearly interpolates between start and end based on alpha (0.0 to 1.0)."""
+    return start + (end - start) * alpha
 
 class player(object):
     def __init__(self,x,y,width,height) :
@@ -65,7 +41,7 @@ class player(object):
 
         self.velocity = 5
         self.is_jump = False 
-        self.jump_count = 10
+        self.jump_count = 1
         
         self.left = False 
         self.right = False 
@@ -81,6 +57,9 @@ class player(object):
 
         if self.walk_count +1 >= 27 :
             self.walk_count = 0
+
+        if self.right or self.left :
+            window.blit(player_gun , (self.x,self.y))
 
         if not(self.standing) :
             if self.left :
@@ -187,16 +166,11 @@ while run :
             man.walk_count = 0
 
     else :
-        if man.jump_count > -10 :
-            neg = 1
-            if man.jump_count < 0 :
-                neg = -1 
-            man.y -= (man.jump_count ** 2) * 0.5 * neg
-            man.jump_count = tween_next_value_step(man.jump_count,10,-10,1/27,ease_out_quad)
-            print(f"jump value is {man.jump_count}")
-        else :
-            man.is_jump = False 
-            man.jump_count = 10
+        man.y -= (parabolic_tween(man.jump_count) ** 20) * 0.5
+        man.jump_count = max(1,man.jump_count+1/(27*jumpDelay))
+        print(f"jump value is {man.jump_count}")
+        if (man.jump_count==1):
+            man.is_jump = 0
 
     redraw_game_window() 
 
