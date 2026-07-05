@@ -142,8 +142,11 @@ while run :
             facing = 1
         if len(bullets) < 10 :
             if man.last_shot >=  10 :
-                bullets.append(projectile(round(man.x + man.width // 2) ,round( man.y + man.height // 2) , 3 , (184,134,11) , facing ))
-                man.last_shot = 0
+                if man.right and not man.left :
+                    bullets.append(projectile(round(man.x + man.width // 2) ,round( man.y + man.height // 2) , 3 , (184,134,11) , facing ))
+                else :
+                    bullets.append(projectile(round(man.x + man.width // 2) ,round( man.y + man.height // 2) , 3 , (184,134,11) , facing ))
+                man.last_shot = 0 
     
     if man.last_shot <= 10 :
         man.last_shot += 1
@@ -170,8 +173,8 @@ while run :
 
     else :
         man.y -= (parabolic_tween(man.jump_count) ** 20) * 0.5
-        man.jump_count = min(1,man.jump_count+1/(27*jumpDelay))
-        print(f"jump value is {man.jump_count}")
+        man.jump_count = min(1,man.jump_count+ (1/(27*jumpDelay)))
+        print(f"jump value is {man.jump_count}->{parabolic_tween(man.jump_count)}")
         if (man.jump_count==1):
             man.is_jump = False
             man.jump_count = 0
