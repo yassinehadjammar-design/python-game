@@ -20,6 +20,7 @@ player_gun = [pygame.image.load('images/left_gun.png'),pygame.image.load('images
 clock = pygame.time.Clock()
 floorY = 410
 jumpDelay = 1
+jumpHeight = 60
 def arch_tween(t: float) -> float:
     """
     Parabolic arch mapping progress `t` (0 to 1):
@@ -173,7 +174,7 @@ while run :
             man.walk_count = 0
 
     else :
-        man.y = -(arch_tween(man.jump_count) * 30) +floorY
+        man.y = -(arch_tween(man.jump_count) * jumpHeight) +floorY
         man.jump_count = min(1,man.jump_count+ (1/(27*jumpDelay)))
         print(f"jump value is {man.jump_count}->{arch_tween(man.jump_count)}")
         if (man.jump_count==1):
