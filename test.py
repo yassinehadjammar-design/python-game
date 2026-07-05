@@ -41,7 +41,7 @@ class player(object):
 
         self.velocity = 5
         self.is_jump = False 
-        self.jump_count = 1
+        self.jump_count = 0
         
         self.left = False 
         self.right = False 
@@ -167,7 +167,7 @@ while run :
 
     else :
         man.y -= (parabolic_tween(man.jump_count) ** 20) * 0.5
-        man.jump_count = max(1,man.jump_count+1/(27*jumpDelay))
+        man.jump_count = min(1,man.jump_count+1/(27*jumpDelay))
         print(f"jump value is {man.jump_count}")
         if (man.jump_count==1):
             man.is_jump = 0
