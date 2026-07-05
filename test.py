@@ -14,7 +14,7 @@ walk_right = [pygame.image.load('images/R1.png'), pygame.image.load('images/R2.p
 walk_left = [pygame.image.load('images/L1.png'), pygame.image.load('images/L2.png'), pygame.image.load('images/L3.png'), pygame.image.load('images/L4.png'), pygame.image.load('images/L5.png'), pygame.image.load('images/L6.png'), pygame.image.load('images/L7.png'), pygame.image.load('images/L8.png'), pygame.image.load('images/L9.png')]
 background_image = pygame.image.load('images/bg.jpg')
 char = pygame.image.load('images/standing.png')
-player_gun = pygame.image.load('images/gun.png')
+player_gun = [pygame.image.load('images/left_gun.png'),pygame.image.load('images/right_gun.png')] 
 
 # game clock 
 clock = pygame.time.Clock()
@@ -59,7 +59,10 @@ class player(object):
             self.walk_count = 0
 
         if self.right or self.left :
-            window.blit(player_gun , (self.x,self.y))
+            if self.right :
+                window.blit(player_gun[1] , (self.x-253,self.y-160))
+            else :
+                window.blit(player_gun[0] , (self.x-285,self.y-160))
 
         if not(self.standing) :
             if self.left :
@@ -139,7 +142,7 @@ while run :
             facing = 1
         if len(bullets) < 10 :
             if man.last_shot >=  10 :
-                bullets.append(projectile(round(man.x + man.width // 2) ,round( man.y + man.height // 2) , 6 , (0,0,0) , facing ))
+                bullets.append(projectile(round(man.x + man.width // 2) ,round( man.y + man.height // 2) , 3 , (184,134,11) , facing ))
                 man.last_shot = 0
     
     if man.last_shot <= 10 :
@@ -170,7 +173,9 @@ while run :
         man.jump_count = min(1,man.jump_count+1/(27*jumpDelay))
         print(f"jump value is {man.jump_count}")
         if (man.jump_count==1):
-            man.is_jump = 0
+            man.is_jump = False
+            man.jump_count = 0
+
 
     redraw_game_window() 
 
