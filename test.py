@@ -27,7 +27,7 @@ def tween_next_value(current_val, start_val, end_val,smoothFunc):
         
     # 2. Calculate linear progress 't' (Normalizes current_val to 0.0 - 1.0)
     t = (current_val - start_val) / (end_val - start_val)
-    
+    print(f"({current_val} - {start_val}) / ({end_val} - {start_val}) = {t}")
     # Enforce strict 0.0 to 1.0 boundaries
     t = max(0.0, min(t, 1.0))
     
